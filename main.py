@@ -86,14 +86,16 @@ class SnakeGameAI:
         
         return reward,gameover, self.score
     
-    def is_collision(self):
+    def is_collision(self,pt=None):
         """
         This method checks for boundary conditions 
         and also snake is eating itself.
         """
-        if self.head.x < 0 or self.head.x > self.width -BLOCK_SIZE or self.head.y < 0 or self.head.y > self.height-BLOCK_SIZE:
+        if pt is None:
+            pt=self.head
+        if pt.x < 0 or pt.x > self.width -BLOCK_SIZE or pt.y < 0 or pt.y > self.height-BLOCK_SIZE:
             return True
-        if self.head in self.snake[1:]:
+        if pt in self.snake[1:]:
             return True
         return False
 
