@@ -26,7 +26,7 @@ BLOCK_SIZE = 20
 SPEED = 10
 
 
-class SnakeGame:
+class SnakeGameAI:
     def __init__(self, width=640, height=480):
 
         self.width = width
@@ -34,7 +34,10 @@ class SnakeGame:
         self.display = pygame.display.set_mode((self.width, self.height))
         pygame.display.set_caption("Snake Game")
         self.clock = pygame.time.Clock()
+        self.reset()
+        
 
+    def reset(self):
         self.direction = Direction.RIGHT
         self.head = Point(self.width / 2, self.height / 2)
         self.snake = [
@@ -45,6 +48,7 @@ class SnakeGame:
         self.score = 0
         self.food = None
         self._place_food()
+        self.frame_iteration=0
 
     def _place_food(self):
         """
@@ -142,13 +146,4 @@ class SnakeGame:
 
         self.head=Point(x,y)
 
-if __name__ == "__main__":
-    game = SnakeGame()
 
-    while True:
-        gameover, score = game.playstep()
-        if gameover is True:
-            print("Final Score:", score)
-            break
-        
-    pygame.quit()
