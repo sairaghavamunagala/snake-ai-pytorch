@@ -60,27 +60,18 @@ class SnakeGameAI:
         if self.food in self.snake:
             self._place_food()
 
-    def playstep(self):
+    def playstep(self,action):
         """
         This method handles update_ui,gameover.
         """
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                quit()
-            if event.type ==pygame.KEYDOWN:
-                if event.key==pygame.K_LEFT:
-                    self.direction=Direction.LEFT
-                if event.key==pygame.K_RIGHT:
-                    self.direction=Direction.RIGHT
-                if event.key==pygame.K_UP:
-                    self.direction=Direction.UP
-                if event.key==pygame.K_DOWN:
-                    self.direction=Direction.DOWN
-        self._move(self.direction)
+        self.frame_iteration+=1
+        self._move(action)
         self.snake.insert(0,self.head)
+
+        reward=0
         gameover=False
-        if self.is_collision():
+        if self.is_collision() or self.frame_iteration>100*len(self.snake):
+            reward=-10
             gameover=True
             return gameover,self.score
         
@@ -93,7 +84,7 @@ class SnakeGameAI:
         self._update_ui()
         self.clock.tick(SPEED)
         
-        return gameover, self.score
+        return reward,gameover, self.score
     
     def is_collision(self):
         """
