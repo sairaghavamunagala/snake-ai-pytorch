@@ -16,7 +16,8 @@ class Agent:
         self.epsilon=0 # to control randomness
         self.gamma=0 #discount rate
         self.memory=deque(MAX_MEMORY) #if memory exceeds it will remove element from first
-
+        self.model=None
+        self.trainer=None
 
     def get_state(self, game):
         head = game.snake[0]
@@ -70,11 +71,16 @@ class Agent:
         self.memory.append((state, action, reward, next_state, done)) 
 
     def train_long_memory(self):
-        pass
+        if len(self.memory) > BATCH_SIZE:
+            mini_sample = random.sample(self.memory, BATCH_SIZE) # list of tuples
+            states, actions, rewards, next_states, dones = zip(*mini_sample)
+            self.trainer.train_step(states, actions, rewards, next_states, dones)
+        else:
+            mini_sample=self.memory
       
 
     def train_short_memory(self, state, action, reward, next_state, done):
-        pass
+        self.trainer.train_step(state,action, reward, next_state, done)
 
     def get_action(self, state):
         pass
